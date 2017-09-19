@@ -24,9 +24,9 @@ public class DemoApplication {
                 context.getBean("myBeanValidationService", MyBeanValidationService.class);
 
         Customer customer = new Customer();
-        customer.setFirstName("C");
+        customer.setFirstName(null);
         customer.setLastName("Folin");
-        customer.setCustomerType(null);
+        customer.setCustomerType(CustomerType.CORPORATE);
         customer.setGender(null);
         Information information = new Information();
         information.setPersonCode(null);
@@ -54,6 +54,10 @@ public class DemoApplication {
         for (ConstraintViolation<T> violation : violations) {
             System.out.println(violation.getPropertyPath());
             System.out.println(violation.getMessage());
+            System.out.println(violation.getInvalidValue());
+            System.out.println(violation.getMessageTemplate());
+
+            System.out.println("-------------");
         }
     }
 }

@@ -1,14 +1,16 @@
 package validation.demo;
 
 import lombok.Data;
+import validation.demo.annot.CheckCustomer;
 
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
-//@CheckCustomer
+@CheckCustomer
 public class Customer {
-    @NotNull
+    @NotNull(message = "firstName must not be NULL")
     @Size(min = 2, max = 60)
     private String firstName;
 
@@ -21,6 +23,7 @@ public class Customer {
 
     private Gender gender;
 
+    @AssertTrue(message = "AssertTrue not pass")
     public boolean isIndividualCustomer() {
         return this.customerType.equals(CustomerType.INDIVIDUAL);
     }

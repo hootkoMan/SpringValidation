@@ -13,6 +13,8 @@ public class MyBeanValidationService {
     private Validator validator;
 
     public <T> Set<ConstraintViolation<T>> validateCustomer(T customer) {
+
+
         return validator.validate(customer);
     }
 }
