@@ -12,7 +12,7 @@ public class MyBeanValidationService {
     @Autowired
     private Validator validator;
 
-    public Set<ConstraintViolation<Customer>> validateCustomer(Customer customer) {
+    public <T> Set<ConstraintViolation<T>> validateCustomer(T customer) {
         return validator.validate(customer);
     }
 }

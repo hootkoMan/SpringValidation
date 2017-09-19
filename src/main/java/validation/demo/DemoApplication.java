@@ -4,7 +4,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.support.GenericXmlApplicationContext;
 
 import javax.validation.ConstraintViolation;
 import java.util.HashSet;
@@ -14,37 +13,47 @@ import java.util.Set;
 @ImportResource("classpath:META-INF/spring/appcontex.xml")
 public class DemoApplication {
 
-	public static void main(String[] args) {
-		ConfigurableApplicationContext context = SpringApplication.run(DemoApplication.class, args);
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = SpringApplication.run(DemoApplication.class, args);
 
 		/*GenericXmlApplicationContext ctx = new GenericXmlApplicationContext();
-		ctx.load("classpath:META-INF/spring/appcontex.xml");
+        ctx.load("classpath:META-INF/spring/appcontex.xml");
 		ctx.refresh();*/
 
-		MyBeanValidationService myBeanValidationService =
-				context.getBean("myBeanValidationService", MyBeanValidationService.class);
+        MyBeanValidationService myBeanValidationService =
+                context.getBean("myBeanValidationService", MyBeanValidationService.class);
 
-		Customer customer = new Customer();
-		customer.setFirstName("C");
-		customer.setLastName("Folin");
-		customer.setCustomerType(null);
-		customer.setGender(null);
+        Customer customer = new Customer();
+        customer.setFirstName("C");
+        customer.setLastName("Folin");
+        customer.setCustomerType(null);
+        customer.setGender(null);
+        Information information = new Information();
+        information.setPersonCode(null);
+        Address address = new Address();
+        address.setBuilding(null);
+        customer.setInformation(information);
+        information.setAddress(address);
 
-		validateCustomer(customer, myBeanValidationService);
-	}
 
-	private static void validateCustomer(Customer customer, MyBeanValidationService myBeanValidationService) {
-		Set<ConstraintViolation<Customer>> violations = new HashSet<>();
-		violations = myBeanValidationService.validateCustomer(customer);
+        validateCustomer(customer, myBeanValidationService);
+        validateCustomer(information, myBeanValidationService);
+        validateCustomer(address, myBeanValidationService);
+    }
 
-		listViolations(violations);
-	}
+    private static <T> void validateCustomer(T obj, MyBeanValidationService myBeanValidationService) {
+        Set<ConstraintViolation<T>> violations = new HashSet<>();
+        violations = myBeanValidationService.validateCustomer(obj);
 
-	private static void listViolations(Set<ConstraintViolation<Customer>> violations) {
-		System.out.println(violations.size());
+        listViolations(violations);
+    }
 
-		for (ConstraintViolation<Customer> violation : violations) {
-			System.out.println(violation.getPropertyPath());
-		}
-	}
+    private static <T> void listViolations(Set<ConstraintViolation<T>> violations) {
+        System.out.println(violations.size());
+
+        for (ConstraintViolation<T> violation : violations) {
+            System.out.println(violation.getPropertyPath());
+            System.out.println(violation.getMessage());
+        }
+    }
 }
